@@ -19,6 +19,6 @@ public class Cinema {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
 
-    public String department;
+    private String department;
 
 }

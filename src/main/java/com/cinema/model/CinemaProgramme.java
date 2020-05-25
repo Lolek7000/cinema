@@ -5,29 +5,21 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
 @Getter
 @Setter
-public class Movie {
+public class CinemaProgramme {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Enumerated(value = EnumType.STRING)
-    private MovieGenre movieGenre;
+    @OneToOne
+    private Cinema cinema;
 
-    private Integer length;
-
-    private String director;
-
-    private String title;
-
-    @Lob
-    private String description;
-
-    private String posterSrc;
-
+    @OneToMany
+    private List<Seance> seances;
 }

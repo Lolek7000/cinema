@@ -18,33 +18,17 @@ public class CinemaRoom {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Integer number;
+    @ManyToOne
+    private Cinema cinema;
 
-    private Integer rows;
+    private Integer roomNumber;
 
-    private Integer columns;
+    private Integer roomRows;
+
+    private Integer roomPlaces;
 
     @Lob
     private List<Seat> seats = new ArrayList<>();
 
-    public CinemaRoom(Integer number, Integer rows, Integer columns){
-        this.number = number;
-        this.rows = rows;
-        this.columns = columns;
-        this.seats = setSeats(rows, columns);
-    }
-
-    private ArrayList<Seat> setSeats(Integer rows, Integer columns){
-        ArrayList<Seat> seats = new ArrayList<>();
-        for(int i=0;i<rows;i++){
-            for(int j=0;j<columns;j++){
-                seats.add(new Seat((char)(i+65),j+1));
-            }
-        }
-        return seats;
-
-    }
-
-
-
 }
+

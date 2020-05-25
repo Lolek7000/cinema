@@ -5,5 +5,11 @@ enum MovieGenre {
     ACTION,
     THRILLER,
     SCIFI,
+    DRAMA,
+    FANTASY,
+    ROMANCE,
+    CRIME,
+    HISTORICAL,
+    HORROR
 
 }
