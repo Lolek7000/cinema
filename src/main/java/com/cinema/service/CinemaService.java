@@ -7,11 +7,13 @@ import java.util.Optional;
 
 public interface CinemaService {
 
-    boolean addCinema(Cinema newCinema);
-
-    boolean deleteCinema(Long cinemaId);
+    void addCinema(Cinema newCinema);
 
     List<Cinema> getAllCinemas();
 
     Optional<Cinema> getCinemaById(Long cinemaId);
+
+    Optional<Cinema> updateCinema(Cinema updatedCinema);
+
+    void deleteCinema(Long cinemaId);
 }

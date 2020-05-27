@@ -1,6 +1,7 @@
 package com.cinema.service.impl;
 
 import com.cinema.model.Cinema;
+import com.cinema.model.Movie;
 import com.cinema.repository.CinemaRepo;
 import com.cinema.service.CinemaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,14 +21,8 @@ public class CinemaServiceImpl implements CinemaService {
     }
 
     @Override
-    public boolean addCinema(Cinema newCinema) {
+    public void addCinema(Cinema newCinema) {
             cinemaRepo.save(newCinema);
-            return true;
-    }
-
-    @Override
-    public boolean deleteCinema(Long cinemaId) {
-        return false;
     }
 
     @Override
@@ -38,5 +33,18 @@ public class CinemaServiceImpl implements CinemaService {
     @Override
     public Optional<Cinema> getCinemaById(Long cinemaId) {
         return cinemaRepo.findById(cinemaId);
+    }
+
+    @Override
+    public Optional<Cinema> updateCinema(Cinema updatedCinema) {
+        Optional<Cinema> cinema = cinemaRepo.findById(updatedCinema.getId());
+        if (cinemaRepo.findById(updatedCinema.getId()).isPresent()){
+        }
+        return cinema;
+    }
+
+    @Override
+    public void deleteCinema(Long cinemaId) {
+        cinemaRepo.deleteById(cinemaId);
     }
 }
