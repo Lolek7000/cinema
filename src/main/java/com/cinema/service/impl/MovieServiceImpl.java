@@ -20,12 +20,8 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public boolean addMovie(Movie newMovie) {
-        if (!movieRepo.findByTitleAndDirector(newMovie.getTitle(), newMovie.getDirector()).isPresent()) {
-            movieRepo.save(newMovie);
-            return true;
-        }
-        return false;
+    public void addMovie(Movie newMovie) {
+        movieRepo.save(newMovie);
     }
 
     @Override
@@ -34,26 +30,22 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public Optional<Movie> getMovie(Long movieId) {
+    public Optional<Movie> getMovieById(Long movieId) {
         return movieRepo.findById(movieId);
     }
 
     @Override
-    public boolean updateMovie(Movie updatedMovie) {
-        if (!movieRepo.findById(updatedMovie.getId()).isPresent()) {
+    public Optional<Movie> updateMovie(Movie updatedMovie) {
+        Optional<Movie> movie = movieRepo.findById(updatedMovie.getId());
+        if (movie.isPresent()){
             movieRepo.save(updatedMovie);
-            return true;
         }
+        return movie;
 
-        return false;
     }
 
     @Override
-    public boolean deleteMovie(Long movieId) {
-        if (movieRepo.findById(movieId).isPresent()) {
-            movieRepo.deleteById(movieId);
-            return true;
-        }
-        return false;
+    public void deleteMovie(Long movieId) {
+        movieRepo.deleteById(movieId);
     }
 }

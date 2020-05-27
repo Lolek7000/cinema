@@ -5,9 +5,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Future;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Seance {
+public class ScreeningRoom {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,19 +24,20 @@ public class Seance {
     @NotNull(message = "Cinema may not be null.")
     private Cinema cinema;
 
-    @ManyToOne
-    @NotNull(message = "Screening room may not be null.")
-    private ScreeningRoom screeningRoom;
+    @NotNull(message = "Room number may not be null")
+    @Min(value = 1, message = "Room number may not be less than 1")
+    private Integer roomNumber;
 
-    @ManyToOne
-    @NotNull(message = "Movie may not be null.")
-    private Movie movie;
+    @NotNull(message = "Room rows may not be null")
+    @Min(value = 4, message = "Room rows may not be less than 1")
+    private Integer roomRows;
+
+    @NotNull(message = "Room places may not be null")
+    @Min(value = 4)
+    private Integer numberOfSeats;
 
     @ElementCollection
     private List<Seat> seats = new ArrayList<>();
 
-    @NotNull(message = "Seance date may not be null.")
-    @Future(message = "Seance date may not be from past.")
-    private LocalDateTime seanceDate;
-
 }
+

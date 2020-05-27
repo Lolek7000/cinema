@@ -21,7 +21,7 @@ public class CinemaController {
     @PostMapping("add")
     public boolean addCinema(@RequestBody Cinema newCinema) {
         return cinemaService.addCinema(newCinema);
-}
+    }
 
     @GetMapping("getAll")
     public List<Cinema> getAllCinemas() {

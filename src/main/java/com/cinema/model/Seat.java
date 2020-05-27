@@ -1,18 +1,25 @@
 package com.cinema.model;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+import javax.persistence.Embeddable;
+
+@Embeddable
+@NoArgsConstructor
 @Getter
 public class Seat {
 
-    private char row;
+    private char rowCharacter;
 
-    private int place;
+    private int placeNumber;
 
     private boolean isOccupy = false;
 
-    public Seat (char row, int place){
-        this.row = row;
-        this.place = place;
+    private boolean isPaid = false;
+
+    public Seat(char rowCharacter, int placeNumber) {
+        this.rowCharacter = rowCharacter;
+        this.placeNumber = placeNumber;
     }
 }
