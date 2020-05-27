@@ -40,4 +40,10 @@ public class Seance {
     @Future(message = "Seance date may not be from past.")
     private LocalDateTime seanceDate;
 
+    public LocalDateTime giveDateOfEnd(){
+        LocalDateTime localDateTime = seanceDate;
+        seanceDate.plusMinutes(movie.getLength()+20+20);
+        return seanceDate;
+    }
+
 }
