@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/movie")
@@ -22,27 +23,27 @@ public class MovieController {
     }
 
     @PostMapping("add")
-    public ResponseEntity<Boolean> addMovie(@RequestBody Movie newMovie) {
-        return new ResponseEntity<>(movieService.addMovie(newMovie), HttpStatus.OK);
+    public void addMovie(@RequestBody Movie newMovie) {
+        movieService.addMovie(newMovie);
     }
 
     @GetMapping("getAll")
-    public ResponseEntity<List<Movie>> getAllMovies() {
-        return new ResponseEntity<>(movieService.getAllMovies(), HttpStatus.OK);
+    public List<Movie> getAllMovies() {
+        return movieService.getAllMovies();
     }
 
     @GetMapping("get/{movieId}")
     public ResponseEntity<Movie> getMovieById(@PathVariable Long movieId) {
-        return ResponseEntity.of(movieService.getMovie(movieId));
+        return ResponseEntity.of(movieService.getMovieById(movieId));
     }
 
     @PutMapping("update")
-    public ResponseEntity<Boolean> updateMovie(@RequestBody Movie updatedMovie) {
-        return new ResponseEntity<>(movieService.updateMovie(updatedMovie), HttpStatus.OK);
+    public ResponseEntity<Movie> updateMovie(@RequestBody Movie updatedMovie) {
+        return ResponseEntity.of(movieService.updateMovie(updatedMovie));
     }
 
     @DeleteMapping("delete/{movieId}")
-    public ResponseEntity<Boolean> deleteMovie(@PathVariable Long movieId) {
-        return new ResponseEntity<>(movieService.deleteMovie(movieId), HttpStatus.OK);
+    public void deleteMovie(@PathVariable Long movieId) {
+        movieService.deleteMovie(movieId);
     }
 }

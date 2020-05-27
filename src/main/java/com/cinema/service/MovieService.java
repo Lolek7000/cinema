@@ -7,14 +7,14 @@ import java.util.Optional;
 
 public interface MovieService {
 
-    boolean addMovie(Movie newMovie);
+    void addMovie(Movie newMovie);
 
     List<Movie> getAllMovies();
 
-    Optional<Movie> getMovie(Long movieId);
+    Optional<Movie> getMovieById(Long movieId);
 
-    boolean updateMovie(Movie updatedMovie);
+    Optional<Movie> updateMovie(Movie updatedMovie);
 
-    boolean deleteMovie(Long movieId);
+    void deleteMovie(Long movieId);
 
 }
