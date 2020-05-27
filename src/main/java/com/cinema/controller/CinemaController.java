@@ -34,6 +34,11 @@ public class CinemaController {
         return ResponseEntity.of(cinemaService.getCinemaById(cinemaId));
     }
 
+    @PutMapping("update")
+    public ResponseEntity<Cinema> updateCinema(@RequestBody Cinema updatedCinema){
+        return ResponseEntity.of(cinemaService.updateCinema(updatedCinema));
+    }
+
     @DeleteMapping("delete/{cinemaId}")
     public void deleteCinema(@PathVariable Long cinemaId) {
         cinemaService.deleteCinema(cinemaId);
