@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/cinema")
 public class CinemaController {
 
@@ -35,7 +36,7 @@ public class CinemaController {
     }
 
     @PutMapping("update")
-    public ResponseEntity<Cinema> updateCinema(@RequestBody Cinema updatedCinema){
+    public ResponseEntity<Cinema> updateCinema(@RequestBody Cinema updatedCinema) {
         return ResponseEntity.of(cinemaService.updateCinema(updatedCinema));
     }
 

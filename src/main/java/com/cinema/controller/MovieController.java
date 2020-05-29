@@ -4,7 +4,6 @@ import com.cinema.model.Movie;
 import com.cinema.service.MovieService;
 import com.cinema.service.impl.MovieServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,7 +11,7 @@ import java.util.List;
 
 
 @RestController
-@CrossOrigin(methods = {RequestMethod.PUT})
+@CrossOrigin
 @RequestMapping("/movie")
 public class MovieController {
 
