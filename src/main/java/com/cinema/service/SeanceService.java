@@ -10,11 +10,11 @@ public interface SeanceService {
 
     ResponseEntity addSeance(Seance seance);
 
-    void deleteSeanceById(Long id);
+    List<Seance> getAllSeances();
 
     Optional<Seance> getSeanceById(Long id);
 
-    List<Seance> getAllSeances();
+    Optional<Seance> updateSeance(Seance updatedSeance);
 
-    void updateSeance(Seance updatedSeance);
+    void deleteSeanceById(Long id);
 }
