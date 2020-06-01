@@ -24,23 +24,11 @@ public class SeanceServiceImpl implements SeanceService {
 
     @Override
     public ResponseEntity addSeance(Seance seance) {
-        if(seanceRepo.existsById(seance.getId())) return new ResponseEntity("Object with that id already exists", HttpStatus.BAD_REQUEST);
 
         if (!isGoodSeanceTime(seance)) return new ResponseEntity("Bad Seance Time", HttpStatus.BAD_REQUEST);
 
         seanceRepo.save(seance);
-        return new ResponseEntity("OK",HttpStatus.OK);
-    }
-
-    @Override
-    public void deleteSeanceById(Long id) {
-        if(seanceRepo.existsById(id))
-            seanceRepo.deleteById(id);
-    }
-
-    @Override
-    public Optional<Seance> getSeanceById(Long id) {
-        return seanceRepo.findById(id);
+        return new ResponseEntity("OK", HttpStatus.OK);
     }
 
     @Override
@@ -49,24 +37,37 @@ public class SeanceServiceImpl implements SeanceService {
     }
 
     @Override
-    public void updateSeance(Seance updatedSeance) {
-        if(seanceRepo.existsById(updatedSeance.getId()))
-            seanceRepo.save(updatedSeance);
+    public Optional<Seance> getSeanceById(Long id) {
+        return seanceRepo.findById(id);
     }
-    private boolean isGoodSeanceTime(Seance seance){
 
-        List<Seance> list = seanceRepo.findAll();
+    @Override
+    public Optional<Seance> updateSeance(Seance updatedSeance) {
+        Optional<Seance> seance = seanceRepo.findById(updatedSeance.getId());
+        if (seance.isPresent()) {
+            seanceRepo.save(updatedSeance);
+        }
+        return seance;
+    }
+
+    @Override
+    public void deleteSeanceById(Long id) {
+        seanceRepo.deleteById(id);
+    }
+
+    private boolean isGoodSeanceTime(Seance seance) {
+
+        List<Seance> list = seanceRepo.findAllByScreeningRoom(seance.getScreeningRoom());
         LocalDateTime start = seance.getSeanceDate();
         LocalDateTime end = seance.giveDateOfEnd();
-        int tabSize = list.size();
 
-        for(int i=0;i<tabSize;i++){
+        for (int i = 0; i < list.size(); i++) {
 
             LocalDateTime tabStart = list.get(i).getSeanceDate();
             LocalDateTime tabEnd = list.get(i).giveDateOfEnd();
-            int roomNumber=list.get(i).getScreeningRoom().getRoomNumber();
+            int roomNumber = list.get(i).getScreeningRoom().getRoomNumber();
 
-            if(seance.getScreeningRoom().getRoomNumber()==roomNumber) {
+            if (seance.getScreeningRoom().getRoomNumber() == roomNumber) {
 
                 if (start.isBefore(tabStart) && end.isAfter(tabStart)) return false;
 

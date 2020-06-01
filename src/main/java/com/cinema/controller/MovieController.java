@@ -4,14 +4,14 @@ import com.cinema.model.Movie;
 import com.cinema.service.MovieService;
 import com.cinema.service.impl.MovieServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
+
 
 @RestController
+@CrossOrigin
 @RequestMapping("/movie")
 public class MovieController {
 
@@ -46,4 +46,5 @@ public class MovieController {
     public void deleteMovie(@PathVariable Long movieId) {
         movieService.deleteMovie(movieId);
     }
+
 }

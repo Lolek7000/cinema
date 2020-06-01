@@ -3,6 +3,7 @@ package com.cinema.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.validator.constraints.UniqueElements;
 
 import javax.persistence.*;
 import javax.validation.constraints.Future;
@@ -16,6 +17,10 @@ import java.util.List;
 @Getter
 @Setter
 public class Seance {
+
+    private static final int DURATION_OF_ADS_BEFORE_SEANCE = 20;
+
+    private static final int TIME_FOR_CLEANING = 20;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,9 +45,9 @@ public class Seance {
     @Future(message = "Seance date may not be from past.")
     private LocalDateTime seanceDate;
 
-    public LocalDateTime giveDateOfEnd(){
+    public LocalDateTime giveDateOfEnd() {
         LocalDateTime localDateTime = seanceDate;
-        seanceDate.plusMinutes(movie.getLength()+20+20);
+        seanceDate.plusMinutes(movie.getLength() + DURATION_OF_ADS_BEFORE_SEANCE + TIME_FOR_CLEANING);
         return seanceDate;
     }
 

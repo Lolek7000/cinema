@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+
 @RestController
+@CrossOrigin
 @RequestMapping("/seance")
 public class SeanceController {
     private SeanceService seanceService;
@@ -19,29 +21,29 @@ public class SeanceController {
         this.seanceService = seanceService;
     }
 
-    @GetMapping("/get/{id}")
-    public Optional<Seance> getSeanceById(@PathVariable Long id){
-        return seanceService.getSeanceById(id);
-    }
-
-    @GetMapping("/getAll")
-    public List<Seance> getAllSeances(){
-        return seanceService.getAllSeances();
-    }
-
     @PostMapping("/add")
-    public ResponseEntity addSeance(@RequestBody Seance seance){
+    public ResponseEntity addSeance(@RequestBody Seance seance) {
         return seanceService.addSeance(seance);
     }
 
-    @DeleteMapping("/delete/{id}")
-    public void deleteSeanceById(@PathVariable Long id){
-        seanceService.deleteSeanceById(id);
+    @GetMapping("/getAll")
+    public List<Seance> getAllSeances() {
+        return seanceService.getAllSeances();
+    }
+
+    @GetMapping("/get/{id}")
+    public Optional<Seance> getSeanceById(@PathVariable Long id) {
+        return seanceService.getSeanceById(id);
     }
 
     @PutMapping("/update")
-    public void updateSeance(@RequestBody Seance updatedSeance){
-        seanceService.updateSeance(updatedSeance);
+    public ResponseEntity<Seance> updateSeance(@RequestBody Seance updatedSeance) {
+        return ResponseEntity.of(seanceService.updateSeance(updatedSeance));
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public void deleteSeanceById(@PathVariable Long id) {
+        seanceService.deleteSeanceById(id);
     }
 
 }

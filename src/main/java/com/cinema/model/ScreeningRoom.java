@@ -7,13 +7,13 @@ import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @NoArgsConstructor
 @Getter
 @Setter
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"roomNumber", "cinema_id"}))
 public class ScreeningRoom {
 
     @Id
@@ -28,16 +28,13 @@ public class ScreeningRoom {
     @Min(value = 1, message = "Room number may not be less than 1")
     private Integer roomNumber;
 
-    @NotNull(message = "Room rows may not be null")
-    @Min(value = 4, message = "Room rows may not be less than 1")
-    private Integer roomRows;
-
-    @NotNull(message = "Room places may not be null")
-    @Min(value = 4)
-    private Integer numberOfSeats;
-
     @ElementCollection
-    private List<Seat> seats = new ArrayList<>();
+    private Set<Seat> seats = new HashSet<>();
 
+    public List<Seat> getSeats() {
+        List<Seat> sortedList = new ArrayList<>(this.seats);
+        Collections.sort(sortedList);
+        return sortedList;
+    }
 }
 
