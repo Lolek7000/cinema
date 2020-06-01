@@ -1,7 +1,8 @@
 package com.cinema.service.impl;
 
+import com.cinema.exceptions.CinemaAlreadyExistsException;
+import com.cinema.exceptions.CinemaNotFoundException;
 import com.cinema.model.Cinema;
-import com.cinema.model.Movie;
 import com.cinema.repository.CinemaRepo;
 import com.cinema.service.CinemaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,11 @@ public class CinemaServiceImpl implements CinemaService {
 
     @Override
     public void addCinema(Cinema newCinema) {
+        if (!cinemaRepo.findByDepartment(newCinema.getDepartment()).isPresent()) {
             cinemaRepo.save(newCinema);
+        } else {
+            throw new CinemaAlreadyExistsException(newCinema.getDepartment());
+        }
     }
 
     @Override
@@ -36,11 +41,16 @@ public class CinemaServiceImpl implements CinemaService {
     }
 
     @Override
-    public Optional<Cinema> updateCinema(Cinema updatedCinema) {
-        Optional<Cinema> cinema = cinemaRepo.findById(updatedCinema.getId());
-        if (cinemaRepo.findById(updatedCinema.getId()).isPresent()){
+    public Cinema updateCinema(Cinema updatedCinema) {
+
+        if (!cinemaRepo.findById(updatedCinema.getId()).isPresent()) {
+            throw new CinemaNotFoundException(updatedCinema.getId());
         }
-        return cinema;
+        if (cinemaRepo.findByDepartment(updatedCinema.getDepartment()).isPresent()) {
+            throw new CinemaAlreadyExistsException(updatedCinema.getDepartment());
+        }
+
+        return cinemaRepo.save(updatedCinema);
     }
 
     @Override

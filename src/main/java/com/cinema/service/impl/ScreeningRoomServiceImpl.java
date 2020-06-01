@@ -1,6 +1,7 @@
 package com.cinema.service.impl;
 
 import com.cinema.exceptions.CinemaNotFoundException;
+import com.cinema.exceptions.ScreeningRoomAlreadyExistsException;
 import com.cinema.exceptions.ScreeningRoomNotFoundException;
 import com.cinema.model.ScreeningRoom;
 import com.cinema.repository.CinemaRepo;
@@ -29,6 +30,9 @@ public class ScreeningRoomServiceImpl implements ScreeningRoomService {
         if (newScreeningRoom.getCinema().getId() == null || !cinemaRepo.findById(newScreeningRoom.getCinema().getId()).isPresent()) {
             throw new CinemaNotFoundException(newScreeningRoom.getCinema().getId());
         }
+        if (screeningRoomRepo.findByCinemaAndRoomNumber(newScreeningRoom.getCinema(), newScreeningRoom.getRoomNumber()).isPresent()) {
+            throw new ScreeningRoomAlreadyExistsException(newScreeningRoom.getCinema().getId(), newScreeningRoom.getRoomNumber());
+        }
         screeningRoomRepo.save(newScreeningRoom);
     }
 
@@ -45,7 +49,15 @@ public class ScreeningRoomServiceImpl implements ScreeningRoomService {
     public Optional<ScreeningRoom> updateScreeningRoom(ScreeningRoom updatedScreeningRoom) {
         Optional<ScreeningRoom> screeningRoom = screeningRoomRepo.findById(updatedScreeningRoom.getId());
         if (screeningRoom.isPresent()) {
+            if (updatedScreeningRoom.getCinema().getId() == null || !cinemaRepo.findById(updatedScreeningRoom.getCinema().getId()).isPresent()) {
+                throw new CinemaNotFoundException(updatedScreeningRoom.getCinema().getId());
+            }
+            if (screeningRoomRepo.findByCinemaAndRoomNumber(updatedScreeningRoom.getCinema(), updatedScreeningRoom.getRoomNumber()).isPresent()) {
+                throw new ScreeningRoomAlreadyExistsException(updatedScreeningRoom.getCinema().getId(), updatedScreeningRoom.getRoomNumber());
+            }
             screeningRoomRepo.save(updatedScreeningRoom);
+        } else {
+            throw new ScreeningRoomNotFoundException(updatedScreeningRoom.getId());
         }
         return screeningRoom;
     }

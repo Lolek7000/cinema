@@ -1,6 +1,8 @@
 package com.cinema.controller;
 
+import com.cinema.exceptions.ObjectAlreadyExistsException;
 import com.cinema.exceptions.ObjectNotFoundException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,16 +25,26 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
     @ExceptionHandler(ConstraintViolationException.class)
     protected ResponseEntity<Object> handleConstraintViolation(ConstraintViolationException ex) {
 
-        List<String> messages = new ArrayList<String>();
+        List<String> messages = new ArrayList<>();
         for (Iterator<ConstraintViolation<?>> iterator = ex.getConstraintViolations().iterator(); iterator.hasNext(); ) {
             messages.add(iterator.next().getMessage());
         }
         return new ResponseEntity<>(messages, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler({ObjectNotFoundException.class})
+    @ExceptionHandler(ObjectNotFoundException.class)
     protected ResponseEntity<String> handleObjectNotFoundException(ObjectNotFoundException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(ObjectAlreadyExistsException.class)
+    protected ResponseEntity<String> handleObjectAlreadyExistsException(ObjectAlreadyExistsException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    protected ResponseEntity<String> handleSQLIntegrityConstraintViolationException(DataIntegrityViolationException ex) {
+        return new ResponseEntity<>(ex.getMostSpecificCause().getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
     @Override

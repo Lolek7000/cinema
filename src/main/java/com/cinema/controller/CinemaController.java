@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -21,7 +22,7 @@ public class CinemaController {
     }
 
     @PostMapping("add")
-    public void addCinema(@RequestBody Cinema newCinema) {
+    public void addCinema(@RequestBody @Valid Cinema newCinema) {
         cinemaService.addCinema(newCinema);
     }
 
@@ -36,8 +37,8 @@ public class CinemaController {
     }
 
     @PutMapping("update")
-    public ResponseEntity<Cinema> updateCinema(@RequestBody Cinema updatedCinema) {
-        return ResponseEntity.of(cinemaService.updateCinema(updatedCinema));
+    public Cinema updateCinema(@RequestBody @Valid Cinema updatedCinema) {
+        return cinemaService.updateCinema(updatedCinema);
     }
 
     @DeleteMapping("delete/{cinemaId}")

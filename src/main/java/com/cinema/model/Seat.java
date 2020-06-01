@@ -5,7 +5,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Embeddable;
-import java.io.Serializable;
 import java.util.Objects;
 
 @Embeddable
@@ -14,9 +13,9 @@ import java.util.Objects;
 @Setter
 public class Seat implements Comparable<Seat> {
 
-    private char rowCharacter;
+    private Character rowCharacter;
 
-    private int placeNumber;
+    private Integer placeNumber;
 
     public Seat(char rowCharacter, int placeNumber) {
         this.rowCharacter = rowCharacter;
@@ -46,6 +45,5 @@ public class Seat implements Comparable<Seat> {
         } else {
             return -1;
         }
-
     }
 }

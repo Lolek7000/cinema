@@ -13,7 +13,7 @@ public interface CinemaService {
 
     Optional<Cinema> getCinemaById(Long cinemaId);
 
-    Optional<Cinema> updateCinema(Cinema updatedCinema);
+    Cinema updateCinema(Cinema updatedCinema);
 
     void deleteCinema(Long cinemaId);
 }
