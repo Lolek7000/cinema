@@ -3,6 +3,7 @@ package com.cinema.service.impl;
 import com.cinema.exceptions.CinemaNotFoundException;
 import com.cinema.exceptions.ScreeningRoomAlreadyExistsException;
 import com.cinema.exceptions.ScreeningRoomNotFoundException;
+import com.cinema.model.Cinema;
 import com.cinema.model.ScreeningRoom;
 import com.cinema.repository.CinemaRepo;
 import com.cinema.repository.ScreeningRoomRepo;
@@ -46,21 +47,27 @@ public class ScreeningRoomServiceImpl implements ScreeningRoomService {
     }
 
     @Override
-    public Optional<ScreeningRoom> updateScreeningRoom(ScreeningRoom updatedScreeningRoom) {
-        Optional<ScreeningRoom> screeningRoom = screeningRoomRepo.findById(updatedScreeningRoom.getId());
-        if (screeningRoom.isPresent()) {
-            if (updatedScreeningRoom.getCinema().getId() == null || !cinemaRepo.findById(updatedScreeningRoom.getCinema().getId()).isPresent()) {
-                throw new CinemaNotFoundException(updatedScreeningRoom.getCinema().getId());
-            }
-            if (screeningRoomRepo.findByCinemaAndRoomNumber(updatedScreeningRoom.getCinema(), updatedScreeningRoom.getRoomNumber()).isPresent()) {
-                throw new ScreeningRoomAlreadyExistsException(updatedScreeningRoom.getCinema().getId(), updatedScreeningRoom.getRoomNumber());
-            }
-            screeningRoomRepo.save(updatedScreeningRoom);
-        } else {
+    public List<ScreeningRoom> getAllScreeningRoomByCinema(Long cinemaId) {
+        Optional<Cinema> cinema = cinemaRepo.findById(cinemaId);
+        if (cinema.isPresent()) {
+            return screeningRoomRepo.findByCinema(cinema.get());
+        }
+        throw new CinemaNotFoundException(cinemaId);
+    }
+
+    @Override
+    public ScreeningRoom updateScreeningRoom(ScreeningRoom updatedScreeningRoom) {
+        if (!screeningRoomRepo.findById(updatedScreeningRoom.getId()).isPresent()) {
             throw new ScreeningRoomNotFoundException(updatedScreeningRoom.getId());
         }
-        return screeningRoom;
-    }
+        if (updatedScreeningRoom.getCinema().getId() == null || !cinemaRepo.findById(updatedScreeningRoom.getCinema().getId()).isPresent()) {
+            throw new CinemaNotFoundException(updatedScreeningRoom.getCinema().getId());
+        }
+        if (screeningRoomRepo.findByCinemaAndRoomNumber(updatedScreeningRoom.getCinema(), updatedScreeningRoom.getRoomNumber()).isPresent()) {
+            throw new ScreeningRoomAlreadyExistsException(updatedScreeningRoom.getCinema().getId(), updatedScreeningRoom.getRoomNumber());
+        }
+        return screeningRoomRepo.save(updatedScreeningRoom);
+}
 
     @Override
     public void deleteScreeningRoomById(Long screeningRoomId) {

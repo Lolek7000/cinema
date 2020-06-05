@@ -2,6 +2,7 @@ package com.cinema.controller;
 
 import com.cinema.exceptions.ObjectAlreadyExistsException;
 import com.cinema.exceptions.ObjectNotFoundException;
+import com.cinema.exceptions.ScreeningRoomAlreadyTakenException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -26,8 +27,8 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
     protected ResponseEntity<Object> handleConstraintViolation(ConstraintViolationException ex) {
 
         List<String> messages = new ArrayList<>();
-        for (Iterator<ConstraintViolation<?>> iterator = ex.getConstraintViolations().iterator(); iterator.hasNext(); ) {
-            messages.add(iterator.next().getMessage());
+        for (ConstraintViolation<?> constraintViolation : ex.getConstraintViolations()) {
+            messages.add(constraintViolation.getMessage());
         }
         return new ResponseEntity<>(messages, HttpStatus.BAD_REQUEST);
     }
@@ -45,6 +46,11 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
     @ExceptionHandler(DataIntegrityViolationException.class)
     protected ResponseEntity<String> handleSQLIntegrityConstraintViolationException(DataIntegrityViolationException ex) {
         return new ResponseEntity<>(ex.getMostSpecificCause().getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
+    }
+
+    @ExceptionHandler(ScreeningRoomAlreadyTakenException.class)
+    protected ResponseEntity<String> handleScreeningRoomAlreadyTakenException(ScreeningRoomAlreadyTakenException ex){
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @Override

@@ -1,14 +1,17 @@
 package com.cinema.service.impl;
 
+import com.cinema.exceptions.*;
+import com.cinema.model.Movie;
+import com.cinema.model.ScreeningRoom;
 import com.cinema.model.Seance;
+import com.cinema.repository.CinemaRepo;
+import com.cinema.repository.MovieRepo;
+import com.cinema.repository.ScreeningRoomRepo;
 import com.cinema.repository.SeanceRepo;
 import com.cinema.service.SeanceService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,19 +19,23 @@ import java.util.Optional;
 public class SeanceServiceImpl implements SeanceService {
 
     private SeanceRepo seanceRepo;
+    private CinemaRepo cinemaRepo;
+    private ScreeningRoomRepo screeningRoomRepo;
+    private MovieRepo movieRepo;
 
     @Autowired
-    public SeanceServiceImpl(SeanceRepo seanceRepo) {
+    public SeanceServiceImpl(SeanceRepo seanceRepo, CinemaRepo cinemaRepo, ScreeningRoomRepo screeningRoomRepo, MovieRepo movieRepo) {
         this.seanceRepo = seanceRepo;
+        this.cinemaRepo = cinemaRepo;
+        this.screeningRoomRepo = screeningRoomRepo;
+        this.movieRepo = movieRepo;
     }
 
     @Override
-    public ResponseEntity addSeance(Seance seance) {
+    public void addSeance(Seance seance) {
 
-        if (!isGoodSeanceTime(seance)) return new ResponseEntity("Bad Seance Time", HttpStatus.BAD_REQUEST);
-
+        CheckIfSeanceIsValid(seance);
         seanceRepo.save(seance);
-        return new ResponseEntity("OK", HttpStatus.OK);
     }
 
     @Override
@@ -42,40 +49,36 @@ public class SeanceServiceImpl implements SeanceService {
     }
 
     @Override
-    public Optional<Seance> updateSeance(Seance updatedSeance) {
-        Optional<Seance> seance = seanceRepo.findById(updatedSeance.getId());
-        if (seance.isPresent()) {
-            seanceRepo.save(updatedSeance);
-        }
-        return seance;
-    }
-
-    @Override
     public void deleteSeanceById(Long id) {
+        if (!seanceRepo.findById(id).isPresent()){
+            throw new SeanceNotFoundException(id);
+        }
         seanceRepo.deleteById(id);
     }
 
-    private boolean isGoodSeanceTime(Seance seance) {
-
-        List<Seance> list = seanceRepo.findAllByScreeningRoom(seance.getScreeningRoom());
-        LocalDateTime start = seance.getSeanceDate();
-        LocalDateTime end = seance.giveDateOfEnd();
-
-        for (int i = 0; i < list.size(); i++) {
-
-            LocalDateTime tabStart = list.get(i).getSeanceDate();
-            LocalDateTime tabEnd = list.get(i).giveDateOfEnd();
-            int roomNumber = list.get(i).getScreeningRoom().getRoomNumber();
-
-            if (seance.getScreeningRoom().getRoomNumber() == roomNumber) {
-
-                if (start.isBefore(tabStart) && end.isAfter(tabStart)) return false;
-
-                else if (start.isBefore(tabEnd) && end.isAfter(tabEnd)) return false;
-
-                else if (start.isBefore(tabStart) && end.isAfter(tabEnd)) return false;
-            }
+    private void CheckIfSeanceIsValid(Seance seance) {
+        if (seance.getCinema().getId() == null || !cinemaRepo.findById(seance.getCinema().getId()).isPresent()) {
+            throw new CinemaNotFoundException(seance.getCinema().getId());
         }
-        return true;
+        if (seance.getMovie().getId() == null || !movieRepo.findById(seance.getMovie().getId()).isPresent()) {
+            throw new MovieNotFoundException(seance.getMovie().getId());
+        }
+        if (seance.getScreeningRoom().getId() == null || !screeningRoomRepo.findById(seance.getScreeningRoom().getId()).isPresent()) {
+            throw new ScreeningRoomNotFoundException(seance.getScreeningRoom().getId());
+        }
+
+        ScreeningRoom screeningRoom = screeningRoomRepo.getOne(seance.getScreeningRoom().getId());
+
+        if (!screeningRoom.getCinema().getId().equals(seance.getCinema().getId())) {
+            throw new ScreeningRoomDoesNotExistException(screeningRoom.getId(), seance.getCinema().getId());
+        }
+
+        Movie movie = movieRepo.getOne(seance.getMovie().getId());
+        seance.setMovie(movie);
+
+        if (seanceRepo.findByDateOfEndBetweenAndScreeningRoom(seance.getSeanceDate(), seance.calculateDateOfEnd(), seance.getScreeningRoom()).isPresent()
+                || seanceRepo.findBySeanceDateBetweenAndScreeningRoom(seance.getSeanceDate(), seance.calculateDateOfEnd(), seance.getScreeningRoom()).isPresent()) {
+            throw new ScreeningRoomAlreadyTakenException(seance.getScreeningRoom().getId(), seance.getSeanceDate());
+        }
     }
 }

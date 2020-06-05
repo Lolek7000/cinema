@@ -20,7 +20,7 @@ public class ScreeningRoomController {
     }
 
     @PostMapping("add")
-    public void addCinemaRoom(@RequestBody @Valid ScreeningRoom newScreeningRoom) {
+    public void addCinemaRoom(@Valid @RequestBody ScreeningRoom newScreeningRoom) {
         screeningRoomService.addScreeningRoom(newScreeningRoom);
     }
 
@@ -34,9 +34,14 @@ public class ScreeningRoomController {
         return ResponseEntity.of(screeningRoomService.getScreeningRoomById(screeningRoomId));
     }
 
+    @GetMapping("getByCinema/{cinemaId}")
+    public List<ScreeningRoom> getScreeningRoomsByCinema(@PathVariable Long cinemaId){
+        return screeningRoomService.getAllScreeningRoomByCinema(cinemaId);
+    }
+
     @PutMapping("update")
-    public ResponseEntity<ScreeningRoom> updateScreeningRoom(@RequestBody @Valid ScreeningRoom updatedScreeningRoom) {
-        return ResponseEntity.of(screeningRoomService.updateScreeningRoom(updatedScreeningRoom));
+    public ScreeningRoom updateScreeningRoom(@RequestBody ScreeningRoom updatedScreeningRoom) {
+        return screeningRoomService.updateScreeningRoom(updatedScreeningRoom);
     }
 
     @DeleteMapping("delete/{screeningRoomId}")
