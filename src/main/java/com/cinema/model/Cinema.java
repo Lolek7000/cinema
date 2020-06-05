@@ -8,12 +8,13 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 @Entity
 @NoArgsConstructor
 @Getter
 @Setter
-public class Cinema {
+public class Cinema implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

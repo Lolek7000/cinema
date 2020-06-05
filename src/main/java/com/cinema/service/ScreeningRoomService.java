@@ -1,5 +1,6 @@
 package com.cinema.service;
 
+import com.cinema.model.Cinema;
 import com.cinema.model.ScreeningRoom;
 
 import java.util.List;
@@ -13,7 +14,9 @@ public interface ScreeningRoomService {
 
     Optional<ScreeningRoom> getScreeningRoomById(Long ScreeningRoomId);
 
-    Optional<ScreeningRoom> updateScreeningRoom(ScreeningRoom updatedScreeningRoom);
+    List<ScreeningRoom> getAllScreeningRoomByCinema(Long cinemaId);
+
+    ScreeningRoom updateScreeningRoom(ScreeningRoom updatedScreeningRoom);
 
     void deleteScreeningRoomById(Long screeningRoomId);
 }

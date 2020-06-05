@@ -3,8 +3,12 @@ package com.cinema.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.validation.annotation.Validated;
 
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 @Embeddable
@@ -13,22 +17,19 @@ import java.util.Objects;
 @Setter
 public class Seat implements Comparable<Seat> {
 
+    @Column(nullable = false)
     private Character rowCharacter;
 
+    @Column(nullable = false)
     private Integer placeNumber;
-
-    public Seat(char rowCharacter, int placeNumber) {
-        this.rowCharacter = rowCharacter;
-        this.placeNumber = placeNumber;
-    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Seat seat = (Seat) o;
-        return rowCharacter == seat.rowCharacter &&
-                placeNumber == seat.placeNumber;
+        return rowCharacter.equals(seat.rowCharacter) &&
+                placeNumber.equals(seat.placeNumber);
     }
 
     @Override

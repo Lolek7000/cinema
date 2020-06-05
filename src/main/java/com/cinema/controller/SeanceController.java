@@ -4,9 +4,9 @@ import com.cinema.model.Seance;
 import com.cinema.service.SeanceService;
 import com.cinema.service.impl.SeanceServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,8 +22,9 @@ public class SeanceController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity addSeance(@RequestBody Seance seance) {
-        return seanceService.addSeance(seance);
+    public void addSeance(@RequestBody @Valid Seance seance) {
+
+        seanceService.addSeance(seance);
     }
 
     @GetMapping("/getAll")
@@ -34,11 +35,6 @@ public class SeanceController {
     @GetMapping("/get/{id}")
     public Optional<Seance> getSeanceById(@PathVariable Long id) {
         return seanceService.getSeanceById(id);
-    }
-
-    @PutMapping("/update")
-    public ResponseEntity<Seance> updateSeance(@RequestBody Seance updatedSeance) {
-        return ResponseEntity.of(seanceService.updateSeance(updatedSeance));
     }
 
     @DeleteMapping("/delete/{id}")

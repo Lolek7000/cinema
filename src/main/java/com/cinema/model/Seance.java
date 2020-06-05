@@ -1,22 +1,23 @@
 package com.cinema.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.validator.constraints.UniqueElements;
 
 import javax.persistence.*;
 import javax.validation.constraints.Future;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @NoArgsConstructor
 @Getter
 @Setter
-public class Seance {
+public class Seance implements Serializable {
 
     private static final int DURATION_OF_ADS_BEFORE_SEANCE = 20;
 
@@ -38,17 +39,23 @@ public class Seance {
     @NotNull(message = "Movie may not be null.")
     private Movie movie;
 
-    @ElementCollection
-    private List<Seat> seats = new ArrayList<>();
+    @Enumerated(EnumType.STRING)
+    @NotNull(message = "Seance type may not be null.")
+    private  SeanceType seanceType;
 
     @NotNull(message = "Seance date may not be null.")
     @Future(message = "Seance date may not be from past.")
     private LocalDateTime seanceDate;
 
-    public LocalDateTime giveDateOfEnd() {
-        LocalDateTime localDateTime = seanceDate;
-        seanceDate.plusMinutes(movie.getLength() + DURATION_OF_ADS_BEFORE_SEANCE + TIME_FOR_CLEANING);
-        return seanceDate;
+    private LocalDateTime dateOfEnd;
+
+    @PostLoad
+    private void postLoad(){
+        dateOfEnd = seanceDate.plusMinutes(movie.getDuration() + DURATION_OF_ADS_BEFORE_SEANCE + TIME_FOR_CLEANING);
     }
 
+    public LocalDateTime calculateDateOfEnd(){
+        LocalDateTime date = seanceDate.plusMinutes(movie.getDuration() + DURATION_OF_ADS_BEFORE_SEANCE + TIME_FOR_CLEANING);
+        return date;
+    }
 }

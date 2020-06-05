@@ -3,10 +3,12 @@ package com.cinema.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.util.*;
 
 @Entity
@@ -14,7 +16,7 @@ import java.util.*;
 @Getter
 @Setter
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"roomNumber", "cinema_id"}))
-public class ScreeningRoom {
+public class ScreeningRoom implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,6 +31,7 @@ public class ScreeningRoom {
     private Integer roomNumber;
 
     @ElementCollection
+    @NotNull(message = "Seats may not be null.")
     private Set<Seat> seats = new HashSet<>();
 
     public List<Seat> getSeats() {
