@@ -8,6 +8,7 @@ import org.springframework.validation.annotation.Validated;
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.executable.ValidateOnExecution;
 import java.io.Serializable;
 import java.util.*;
 
@@ -32,7 +33,7 @@ public class ScreeningRoom implements Serializable {
 
     @ElementCollection
     @NotNull(message = "Seats may not be null.")
-    private Set<Seat> seats = new HashSet<>();
+    private Set<Seat> seats;
 
     public List<Seat> getSeats() {
         List<Seat> sortedList = new ArrayList<>(this.seats);

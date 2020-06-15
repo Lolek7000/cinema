@@ -5,8 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.validation.annotation.Validated;
 
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.Objects;
@@ -22,6 +21,10 @@ public class Seat implements Comparable<Seat> {
 
     @Column(nullable = false)
     private Integer placeNumber;
+
+    @Enumerated(value = EnumType.STRING)
+    @Column(nullable = false)
+    private SeatType seatType;
 
     @Override
     public boolean equals(Object o) {

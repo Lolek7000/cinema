@@ -5,34 +5,43 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
+import java.util.Set;
 
 @Entity
+@NoArgsConstructor
 @Getter
 @Setter
-@NoArgsConstructor
 public class Reservation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
 
-    @ManyToOne
-    @NotNull(message = "seance cannot be null")
-    private Seance seance;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private Integer reservationNumber;
 
-    @NotNull(message = "email cannot be null")
+    @NotNull(message = "First name is mandatory.")
+    @NotBlank(message = "First name is mandatory.")
+    @NotEmpty(message = "First name is mandatory.")
+    private String firstName;
+
+    @NotNull(message = "Last name is mandatory.")
+    @NotBlank(message = "Last name is mandatory.")
+    @NotEmpty(message = "Last name is mandatory.")
+    private String lastName;
+
+    @Email
     private String email;
 
-    @NotNull(message = "ticketList cannot be null")
-    private ArrayList<Ticket> ticketList;
+    @ManyToOne
+    @NotNull(message = "Seance is mandatory.")
+    private Seance seance;
 
-    @NotNull(message = "ticketAmountList cannot be null")
-    private ArrayList<TicketAmount> ticketAmountList;
+    @ElementCollection
+    private Set<Seat> seats;
 
-    @NotNull(message = "seanceType cannot be null")
-    private SeanceType seanceType;
-
-    Double reservationPrice;
 }

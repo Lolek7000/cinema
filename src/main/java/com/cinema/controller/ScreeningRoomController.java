@@ -40,7 +40,7 @@ public class ScreeningRoomController {
     }
 
     @PutMapping("update")
-    public ScreeningRoom updateScreeningRoom(@RequestBody ScreeningRoom updatedScreeningRoom) {
+    public ScreeningRoom updateScreeningRoom(@Valid @RequestBody ScreeningRoom updatedScreeningRoom) {
         return screeningRoomService.updateScreeningRoom(updatedScreeningRoom);
     }
 

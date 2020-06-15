@@ -1,14 +1,15 @@
 package com.cinema.service;
 
 import com.cinema.model.Reservation;
+import com.cinema.model.TicketType;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.ArrayList;
 
 public interface ReservationService {
-    void addReservation(Reservation reservation);
-    Optional<Reservation> getReservationById(Long id);
-    List<Reservation> getAllReservations();
-    void updateReservation(Reservation reservation);
-    void deleteReservationById(Long id);
+
+    boolean makeReservation(Reservation reservation);
+
+    void confirmReservation(Integer reservationNumber, ArrayList<TicketType> ticketTypes);
+
+    boolean cancelReservation(Integer reservationNumber);
 }
